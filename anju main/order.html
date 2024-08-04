@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Food</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Order Food</h2>
+        <form id="orderForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile Number:</label>
+                <input type="text" class="form-control" id="mobile" placeholder="Enter mobile number" name="mobile" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <textarea class="form-control" id="address" rows="3" name="address" required></textarea>
+            </div>
+            <div class="form-group">
+			      <label>Delivery Method:</label>
+			      <br>
+			      <br>
+			      <input type="radio" id="delivery" name="deliveryMethod" value="delivery" checked>
+			      <label for="delivery">Delivery</label>
+			      <br>
+			      <br>
+			      <input type="radio" id="takeout" name="deliveryMethod" value="takeout">
+			      <label for="takeout">Takeout</label>
+			      <br>
+			      <br>
+			      <p> <b>Payment Mode: </b>Cash on Delivery </p>
+		    </div>
+            <div class="form-group">
+                <label for="foodItem">Food Item:</label>
+                <select class="form-control" id="foodItem" onchange="calculateCost()" required>
+                    <option value="Select" data-cost="0.00">Select</option>
+      <option value="Chicken biriyani" data-cost="180.00">Chicken biriyani Rs.180</option>
+      <option value="Mutton biriyani" data-cost="280.00">Mutton biriyani Rs.280</option>
+      <option value="Prawns Biriyani" data-cost="299.00">Prons Biriyani Rs.299</option>
+      <option value="Mixed Biriyani" data-cost="360.00">Mixed Biriyani Rs.360</option>
+      <option value="Chilli Chicken" data-cost="220.00">Chilli Chicken Rs.220</option>
+      <option value="Dragon Chicken" data-cost="320.00">Dragon Chicken Rs.320</option>
+      <option value="Dried Prawns" data-cost="280.00">Dried Prawns Rs.280</option>
+      <option value="Mixed Spicy" data-cost="350.00">Mixed Spicy Rs.350</option>
+      <option value="Chicken fry piece mandi" data-cost="1200.00">Chicken fry piece mandi Rs.1200</option>
+      <option value="Chicken juicy mandi" data-cost="1200.00">Chicken juicy mandi Rs.1200</option>
+      <option value="Mutton Mandi" data-cost="1400.00">Mutton Mandi Rs.1400</option>
+      <option value="Mutton juicy Mandi" data-cost="1400.00">Mutton juicy Mandi Rs.1400</option>
+      <option value="Mixed Mandi" data-cost="1500.00">Mixed Mandi Rs.1500</option>
+      <option value="Fish Mandi" data-cost="1500.00">Fish Mandi Rs.1500</option>
+      <option value="Creamy chocolate cake" data-cost="420.00">Creamy chocolate cake Rs.420</option>
+      <option value="Creamy strawberry cake" data-cost="360.00">Creamy strawberry cake Rs.360</option>
+      <option value="Pastery" data-cost="280.00">Pastery Rs.280</option>
+      <option value="Chocolate Milk Shake" data-cost="110.00">Chocolate Milk Shake Rs.110</option>
+      <option value="Strawberry Milk Shake" data-cost="90.00">Strawberry Milk Shake Rs.90</option>
+      <option value="Oreo Milk Shake" data-cost="110.00">Oreo Milk Shake Rs.110</option>
+      <option value="Venella Milk Shake"data-cost="110.00">Venella Milk Shake Rs.110</option>
+      <option value="Chicken soup" data-cost="220.00">Chicken soup Rs.220</option>
+      <option value="Chicken nancho soup" data-cost="240.00">Chicken nancho soup Rs.240</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="number" class="form-control" id="quantity" placeholder="Enter quantity" name="quantity" onchange="calculateCost()" required>
+            </div>
+            <div class="form-group">
+                <label for="special">Special Requests:</label>
+                <textarea class="form-control" id="special" rows="3" name="special"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="costDisplay">Total Cost:</label>
+                <output class="form-control" id="costDisplay" name="costDisplay">Total Cost: Rs.0.00</output>
+            </div>
+            <button type="submit" class="btn btn-primary">Order</button>
+             <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
+        </form>
+        <h2 class="mt-5">Order Details</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Mobile Number</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Food</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Special Requests</th>
+                </tr>
+            </thead>
+            <tbody id="orderDetails">
+            </tbody>
+        </table>
+    </div>
+
+	<script> 
+		function calculateCost() 
+		{ 
+		const foodItem = document.getElementById('foodItem');
+	 	const quantity = document.getElementById('quantity'); 
+	 	const costDisplay = document.getElementById('costDisplay'); 
+		 if (foodItem.value === '' || quantity.value === '') 
+		 	{ 
+		 		costDisplay.value = 'Total Cost: Rs.0.00'; 
+		 	} 
+	 	else 
+	 		{ 
+	 			const foodCost = parseFloat(foodItem.options[foodItem.selectedIndex].getAttribute('data-cost')); 
+	 			const totalCost = foodCost * quantity.value; 
+	 			costDisplay.value = totalCost.toFixed(2);
+	 		} 
+	 	} 
+	 	document.getElementById('orderForm').addEventListener('submit', function(event) { 
+	 		event.preventDefault(); 
+	 		const name = document.getElementById('name').value; 
+	 		const mobile = document.getElementById('mobile').value; 
+	 		const email = document.getElementById('email').value; 
+	 		const address = document.getElementById('address').value; 
+	 		const foodItem = document.getElementById('foodItem').value; 
+	 		const quantity = document.getElementById('quantity').value; 
+	 		const costDisplay = document.getElementById('costDisplay').value; 
+	 		const special = document.getElementById('special').value; 
+	 		const row = `<tr> <th scope="row">${Date.now()}</th> <td>${name}</td> <td>${mobile}</td> <td>${email}</td> <td>${address}</td> <td>${foodItem}</td> <td>${quantity}</td> <td>${costDisplay}</td> <td>${special}</td> </tr>`; document.getElementById('orderDetails').innerHTML += row; event.target.reset();
+	 	}); 
+        document.getElementById('submitBtn').addEventListener('click', function(event) {
+    event.preventDefault();
+    const form = document.getElementById('orderForm');
+    const formData = new FormData(form);
+    const totalCost = document.getElementById('costDisplay').value;
+    let tableData = '';
+    for(let pair of formData.entries()) {
+        tableData += `<td>${pair[1]}</td>`;
+    }
+    tableData += `<td>${totalCost}</td>`;
+    const tableRow = `<tr>${tableData}</tr>`;
+    document.getElementById('orderDetails').innerHTML += tableRow;
+    alert('Order successful');
+    location.reload();
+});
+
+
+  document.getElementById('submitBtn').addEventListener('click', function (event) {
+    event.preventDefault();
+
+    // Extract data from the form
+    const formData = new FormData(document.getElementById('orderForm'));
+    const totalCost = document.getElementById('costDisplay').value;
+
+    // Convert FormData to JSON
+    const orderData = {};
+    formData.forEach((value, key) => {
+      orderData[key] = value;
+    });
+
+    // Add totalCost to the orderData
+    orderData.totalCost = totalCost;
+
+    // Send the order data to the server
+    fetch('http://localhost:3000/api/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        alert('Order successful');
+        location.reload();
+      })
+      .catch((error) => console.error('Error:', error));
+  });
+
+
+	</script>
+    
+</body>
+</html>
